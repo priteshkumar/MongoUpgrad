@@ -1,3 +1,5 @@
+import static com.mongodb.client.model.Filters.eq;
+
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
@@ -6,6 +8,7 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import entity.Student;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 
 public class MongoApp {
 
@@ -20,14 +23,16 @@ public class MongoApp {
     MongoCollection<Document> students = database.getCollection("students");
 
     System.out.println(students);
-    Document st = new Student(2, "smith", 4, 29).createDBObject();
+    Document st = new Student(3, "vladislav", 7, 29).createDBObject();
     students.insertOne(st);
 
     MongoCursor<Document> cursor = students.find().iterator();
     while (cursor.hasNext()) {
       System.out.println(cursor.next().toJson());
     }
-    // System.out.println(res.toJson());
 
+    System.out.println("##### find one doc by filter#####");
+    Bson filter = eq("name", "smith");
+    System.out.println((students.find(filter)).first().toJson());
   }
 }
